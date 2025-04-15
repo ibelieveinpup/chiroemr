@@ -12,7 +12,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--json", help="Outputs patient list as json", action="store_true")
-parser.add_argument("--pdf", help="Outputs patient list as pdf file", action="store_true")
+parser.add_argument("--csv", help="Outputs patient list as a csv file", action="store_true")
 args = parser.parse_args()
 
 
@@ -81,6 +81,12 @@ def main():
     
     if args.json:
         output_as_json(all_json_data)
+    if args.csv:
+        if all_json_data:
+            headers = list(all_json_data[0].keys())
+            print(','.join(headers))
+            for row in all_json_data:
+                print(','.join(str(row.get(h, "")) for h in headers))
     else:
         print_patient_info(all_json_data)
 
