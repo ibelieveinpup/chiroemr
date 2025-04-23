@@ -83,7 +83,8 @@ def main():
         output_as_json(all_json_data)
     if args.csv:
         if all_json_data:
-            headers = list(all_json_data[0].keys())
+            # This is a magic line that creats a set of all possible keys (even ones that are added later as the program is developed)
+            headers = sorted(set().union(*(row.keys() for row in all_json_data)))
             print(','.join(headers))
             for row in all_json_data:
                 print(','.join(str(row.get(h, "")) for h in headers))
