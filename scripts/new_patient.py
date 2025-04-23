@@ -34,6 +34,7 @@ def main():
     last_name = input("Last Name: ")
     dob = input("Date of Birth (YYYY-MM-DD): ")
     phone = input("Phone Number: ")
+    email = input("Email: ")
 
     slug = slugify(first_name, middle_name, last_name)
     timestamp = datetime.now().isoformat()
@@ -69,6 +70,7 @@ def main():
         "last_name": last_name,
         "dob": dob,
         "phone": phone,
+        "email": email,
         "created": timestamp
     }
 

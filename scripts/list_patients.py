@@ -63,10 +63,6 @@ def print_patient_info(all_json_data):
 def output_as_json(all_json_data):
     print(f"{json.dumps(all_json_data, indent=4)}")
 
-def output_as_pdf(all_json_data):
-    pass
-
-
 
 def main():
     patient_directory_paths = retrieve_patient_paths()
@@ -77,7 +73,7 @@ def main():
      #   print(info_file_path)
     all_json_data = grab_json_data(info_file_paths)
     #for json_data in all_json_data:
-     #   print(json_data)
+    #    print(json_data)
     
     if args.json:
         output_as_json(all_json_data)
