@@ -4,6 +4,7 @@ import os
 import json
 from datetime import datetime
 import subprocess
+import sys
 
 PATIENTS_DIR = "patients"
 
@@ -74,16 +75,30 @@ def main():
 
     visits_dir = os.path.join(patient_path, "visits")
     os.makedirs(visits_dir, exist_ok=True)
-
-    visit = prompt_visit_data()
+    
+    #visit = prompt_visit_data()
     ts = datetime.now().strftime("%Y-%m-%d_%H%M")
-    visit_file = os.path.join(visits_dir, f"{ts}.json")
+    new_visit_dir = os.path.join(visits_dir, ts)
+    os.makedirs(new_visit_dir, exist_ok=True)
+    new_visit_meta_file = os.path.join(new_visit_dir, "meta.json")
+    visit_number = sum(
+                    1 for name in os.listdir(visits_dir)
+                    if os.path.isdir(os.path.join(visits_dir, name))
+                    )
+    # visit_file = os.path.join(visits_dir, f"{ts}.json")
+    meta = {
+        "timestamp": ts,
+        "chiropractor": "Dr S",
+        "Visit_number": visit_number
+    }
+    with open(new_visit_meta_file, "w") as f:
+        json.dump(meta, f, indent=4)
 
-    with open(visit_file, "w") as f:
-        json.dump(visit, f, indent=4)
-
-    print(f"\n[✓] Visit saved to {visit_file}")
-
+    # print(f"\n[✓] Visit saved to {visit_file}")
+    # print(f"\n New Visit Ready to go: \n")
+    # print(f"{new_visit_dir}")
+    print(f"export VISIT_PATH={new_visit_dir}")
+    print(f"# You can now run: ./record_notes.py $VISIT_PATH", file=sys.stderr)
 if __name__ == "__main__":
     main()
 
