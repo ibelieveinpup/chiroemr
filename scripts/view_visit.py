@@ -31,21 +31,22 @@ def fallback_select(options, label="Choose one:"):
             return options[idx]
     return None
 
-def select_patient():
+def select_patient_folder():
     if not os.path.exists(PATIENTS_DIR):
-        print("No patients found.")
+        print("Patients dir not found.")
         return None
     
     folders = sorted(os.listdir(PATIENTS_DIR))
-    return use_fzf(folders) or fallback_select(visits, "Select a visit:")
+    return use_fzf(folders) or fallback_select(folders, "Select a patient:")
 
-def select_visit(visits_path):
-    visits = sorted(os.listdir(visits_path), reverse=True)
-    return use_fzf(visits) or fallback_select(visits, "Select a visit:")
+def select_visit_folder(visits_folder_path):
+    visits_folders = sorted(os.listdir(visits_folder_path), reverse=True)
+    return use_fzf(visits_folders) or fallback_select(visits_folders, "Select a visit:")
 
-def load_visit(file_path):
+# A generic data_load function
+def data_load(file_path):
     with open(file_path, "r") as f:
-        return json.load(f)
+         return json.load(f)
 
 def print_visit(visit_data):
     print("\n=== Visit Details ===")
@@ -58,25 +59,58 @@ def print_visit(visit_data):
     print(f"Pre: {weiibal.get('pre', 'None')}")
     print(f"Post: {weiibal.get('post', 'None')}")
     
+def print_basic_visit_info(patient_info, visit_info):
+    print(f"\n{patient_info.get('first_name')} {patient_info.get('last_name')}")
+    print(f"{patient_info.get('phone', 'None')}")
+    print(f"Email: {patient_info.get('email', 'None on file!')}")
+    print(f"Visit Date: {visit_info.get('timestamp', ' ')}")
+    print(f"Chiropractor: {visit_info.get('chiropractor', ' ')}")
+
+
+def print_weiibal_info(weiibal_dir):
+    for measurement in weiibal_dir:
+        print("Coming soon!")
+
 def main():
-    selected_patient = select_patient()
-    if not selected_patient:
+    patient_folder = select_patient_folder()
+    if not patient_folder:
         print("❌ No patient selected.")
         return
-    patient_path = os.path.join(PATIENTS_DIR, selected_patient)
-    visits_path = os.path.join(patient_path, "visits")
+    patient_folder_path = os.path.join(PATIENTS_DIR, patient_folder)
+    visits_folder_path = os.path.join(patient_folder_path, "visits")
 
-    if not os.path.exists(visits_path):
+    if not os.path.exists(visits_folder_path):
         print("⚠️ No visits found for this patient.")
         return
-    selected_visit = select_visit(visits_path)
-    if not selected_visit:
+    selected_visit_folder = select_visit_folder(visits_folder_path)
+    if not selected_visit_folder:
         print("❌ No visit selected.")
         return
     
-    visit_file = os.path.join(visits_path, selected_visit)
-    visit_data = load_visit(visit_file)
-    print_visit(visit_data)
+    # Now it is a visit_folder instead of an visit_file
+    selected_visit_folder_path = os.path.join(visits_folder_path, selected_visit_folder)
+    # test it
+    if not os.path.exists(selected_visit_folder_path):
+        print(" Selected visit folder path does not exist!")
+        return
+
+    # Now that we have the visit_folder, let's build the visit.
+    # Let's start with the clients name 
+    patient_info_path = os.path.join(patient_folder_path, "info.json")
+    if not os.path.exists(patient_info_path):
+        print(" No info data found for this patient!")
+        return
+
+    visit_info_path = os.path.join(selected_visit_folder_path, "meta.json")
+    # print (visit_info_path)
+    if not os.path.exists(visit_info_path):
+        print(" No meta.json found for the selected visit")
+        return
+
+    patient_info = data_load(patient_info_path)
+    visit_info = data_load(visit_info_path)
+    print_basic_visit_info(patient_info, visit_info)
+
 
 if __name__ == "__main__":
     main()
