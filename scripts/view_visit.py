@@ -67,10 +67,15 @@ def print_basic_visit_info(patient_info, visit_info):
     print(f"Chiropractor: {visit_info.get('chiropractor', ' ')}")
 
 
-def print_weiibal_info(weiibal_dir):
-    for measurement in weiibal_dir:
-        print("Coming soon!")
-
+def print_weiibal_info(weiibal_info):
+    print(f"Timestamp: {weiibal_info.get('timestamp')}")
+    print(f"Units: {weiibal_info.get('units')}")
+    print(f"Total Weight: {weiibal_info.get('total_weight')}")
+    for plane in weiibal_info['planes']:
+        print(f"Side: {plane.get('increased_weight')}")
+        print(f"Amount:  {plane.get('value')}")
+        print(f"Percentage: {plane.get('percentage')}%")
+    
 def main():
     patient_folder = select_patient_folder()
     if not patient_folder:
@@ -107,9 +112,28 @@ def main():
         print(" No meta.json found for the selected visit")
         return
 
+    # Now let's grab some visit data
+    # For Weiibal...
+    weiibal_dir_path = os.path.join(selected_visit_folder_path, "weiibal")
+
     patient_info = data_load(patient_info_path)
     visit_info = data_load(visit_info_path)
     print_basic_visit_info(patient_info, visit_info)
+
+    #Now print the weiibal info if there is any
+    # print(weiibal_dir_path)
+    if os.path.exists(weiibal_dir_path):
+        i = 1
+        print("\n==== Weiibal Measurments ====")
+        for weiibal_file in sorted(os.listdir(weiibal_dir_path)):
+            weiibal_file_path = os.path.join(weiibal_dir_path, weiibal_file)
+            weiibal_info = data_load(weiibal_file_path)
+            print(f"Reading {i}")
+            print_weiibal_info(weiibal_info)
+            print("\n")
+            i+=1
+    
+    print("\n✅ Visit review complete.")
 
 
 if __name__ == "__main__":
