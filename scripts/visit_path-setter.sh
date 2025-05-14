@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Load utility functions relative to script location
 source "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
 
