@@ -46,17 +46,20 @@ def grab_json_data(info_file_paths):
             all_json_data.append(json.load(content))
     return all_json_data
     
+def build_headers(all_json_data):
+    return sorted(set().union(*(row.keys() for row in all_json_data)))
+
+def output_as_csv(all_json_data):
+    headers = build_headers(all_json_data)
+    print(','.join(headers))
+    for row in all_json_data:
+        print(','.join(str(row.get(h, "")) for h in headers))
+
 def print_patient_info(all_json_data):
-    headers = ["Name", "DOB", "Phone", "Date Created"]
+    headers = build_headers(all_json_data)
     table = []
     for data in all_json_data:
-        name = f"{data['first_name']} {data['middle_name']} {data['last_name']}"
-        row = [name,
-               data.get("dob", ""),
-               data.get("phone", ""),
-               data.get("created", "")
-               ]
-        table.append(row)
+        table.append([data.get(h, "") for h in headers])
 
     print(tabulate(table, headers=headers, tablefmt="grid"))
 
@@ -78,12 +81,8 @@ def main():
     if args.json:
         output_as_json(all_json_data)
     if args.csv:
-        if all_json_data:
-            # This is a magic line that creats a set of all possible keys (even ones that are added later as the program is developed)
-            headers = sorted(set().union(*(row.keys() for row in all_json_data)))
-            print(','.join(headers))
-            for row in all_json_data:
-                print(','.join(str(row.get(h, "")) for h in headers))
+        output_as_csv(all_json_data)
+
     else:
         print_patient_info(all_json_data)
 
