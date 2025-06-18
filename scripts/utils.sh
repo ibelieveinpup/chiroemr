@@ -11,6 +11,13 @@ has_subdirs() {
     find "$dir" -mindepth 1 -maxdepth 1 -type d | grep -q .
 }
 
+check_visit_path() {
+	if [[ -z $VISIT_PATH ]]; then
+	echo "Error!  Must set \$VISIT_PATH first: source visit_path_setter.sh"
+	exit 1
+	fi
+}
+
 # Pretty banner message
 banner() {
     echo "==== $* ===="
