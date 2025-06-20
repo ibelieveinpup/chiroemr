@@ -50,13 +50,12 @@ echo "S: $sacro_tuberous Notes: $s_notes"
 read -r -p "Would you like to save this reading (y,n)?  " input
 if  test "$input" = y ; then
 	echo "it was y!"
-	exit 1
 else 
 	echo "it wasn't y!"
-	exit 1
 fi
 
 
+# TODO SWAP OUT THE FOLLOWING LINE TO ACTUALLY SAVE
 #cat > "$full_helps_path" <<EOF
 cat<<EOF
 {
@@ -96,7 +95,8 @@ cat<<EOF
   ]
 }
 EOF
-
+# TODO  REMOVE THE FOLLOWING LINE FOR PRODUCTION
+exit 1
 # Check if the file was created successfully
 if [ $? -eq 0 ]; then
   echo "Success: File saved to $full_helps_path"
