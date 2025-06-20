@@ -57,7 +57,8 @@ else
 fi
 
 
-cat > "$full_helps_path" <<EOF
+#cat > "$full_helps_path" <<EOF
+cat<<EOF
 {
   "timestamp": "$timestamp",
   "timing": "$timing",
@@ -84,6 +85,7 @@ cat > "$full_helps_path" <<EOF
 	  "name": "Side of Pain",
       	  "symbol": "P",
 	  "side": "$pain"
+	  "notes": "$p_notes",
 	},
 	{
 	  "name": "Sacrotuberous Tension",
