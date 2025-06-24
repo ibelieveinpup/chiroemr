@@ -55,48 +55,45 @@ else
 fi
 
 
-# TODO SWAP OUT THE FOLLOWING LINE TO ACTUALLY SAVE
-#cat > "$full_helps_path" <<EOF
-cat<<EOF
+cat > "$full_helps_path" <<EOF
 {
-  "timestamp": "$timestamp",
-  "timing": "$timing",
-  "position": "$position",
-  "findings": [
-	{
-	  "name":"High Iliac Crest",
-	  "symbol": "H",
-	  "side": "$high_crest"
-	},
+    "timestamp": "$timestamp",
+    "timing": "$timing",
+    "position": "$position",
+    "findings": [
         {
- 	  "name": "Errector Spinae Tension",
-	  "symbol": "E",
-	  "side": "$errector_spinae",
-	  "notes: "$e_notes"
-        },
-     	{
-	  "name": "Rotation of LFMV",
-	  "symbol": "L",
-	  "level": "$lumbar_level",
-	  "side": "$lowest"
+            "name": "High Iliac Crest",
+            "symbol": "H",
+            "side": "$high_crest"
         },
         {
-	  "name": "Side of Pain",
-      	  "symbol": "P",
-	  "side": "$pain"
-	  "notes": "$p_notes",
-	},
-	{
-	  "name": "Sacrotuberous Tension",
-	  "symbol": "S",
-	  "side": "$sacro_tuberous",
-	  "notes": "$s_notes"
-	}
-  ]
+            "name": "Errector Spinae Tension",
+            "symbol": "E",
+            "side": "$errector_spinae",
+            "notes": "$e_notes"
+        },
+        {
+            "name": "Rotation of LFMV",
+            "symbol": "L",
+            "level": "$lumbar_level",
+            "side": "$lowest"
+        },
+        {
+            "name": "Side of Pain",
+            "symbol": "P",
+            "side": "$pain",
+            "notes": "$p_notes"
+        },
+        {
+            "name": "Sacrotuberous Tension",
+            "symbol": "S",
+            "side": "$sacro_tuberous",
+            "notes": "$s_notes"
+        }
+    ]
 }
 EOF
-# TODO  REMOVE THE FOLLOWING LINE FOR PRODUCTION
-exit 1
+
 # Check if the file was created successfully
 if [ $? -eq 0 ]; then
   echo "Success: File saved to $full_helps_path"
