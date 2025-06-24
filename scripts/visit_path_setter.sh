@@ -11,10 +11,10 @@ if [ "$0" = "$BASH_SOURCE" ]; then
 fi
 
 # First let's use fzf to pick the patient
-patients_dir=$(ls patients |fzf)
+chosen_patient=$(ls patients |fzf)
 
-# Might as well prepend the patients folder to the patients_dir
-patients_path="patients/$patients_dir"
+# Might as well prepend the patients folder to the chosen_patient
+patients_path="patients/$chosen_patient"
 # echo $patients_path
 # Now a fancy if statement withou an "if"
 [ ! -d "$patients_path" ] && cecho red "❌ Invalid directory chosen: $patients_path" && exit 1
