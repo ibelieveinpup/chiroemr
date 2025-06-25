@@ -1,9 +1,11 @@
 #!/bin/bash
 # utils.sh - Common helper functions for chiroemr scripts
+# load in a script with the following line:
+# source "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
 
 # Abort if sourced twice (optional safety)
-[ -n "$_CHIROEMR_UTILS_LOADED" ] && return
-_CHIROEMR_UTILS_LOADED=1
+[ -n "${_CHIROEMR_UTILS_LOADED:-}" ] && return
+readonly _CHIROEMR_UTILS_LOADED=1
 
 # Check if directory contains at least one subdirectory
 has_subdirs() {

@@ -49,13 +49,7 @@ echo "P: $pain Notes: $p_notes"
 echo "S: $sacro_tuberous Notes: $s_notes"
 read -r -p "Would you like to save this reading (y,n)?  " input
 if  test "$input" = y ; then
-	echo "it was y!"
-else 
-	echo "it wasn't y!"
-fi
-
-
-cat > "$full_helps_path" <<EOF
+	cat > "$full_helps_path" <<EOF
 {
     "timestamp": "$timestamp",
     "timing": "$timing",
@@ -93,6 +87,10 @@ cat > "$full_helps_path" <<EOF
     ]
 }
 EOF
+else
+	echo "Reading Not saved."
+	exit 
+fi
 
 # Check if the file was created successfully
 if [ $? -eq 0 ]; then

@@ -41,9 +41,9 @@ if test "$visit_choice" = "New"; then
 	visit_number=$(ls "$visits_dir" | wc -l)
 	cat > "$new_visit_metafile_path" <<EOF
 {
-    "timestamp": "$timestamp"
+    "timestamp": "$timestamp",
     "chiropractor": "Dr S",
-    "Visit_number": $visit_number
+    "Visit_number": "$visit_number"
 }
 EOF
 else
