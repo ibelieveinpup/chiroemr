@@ -19,40 +19,40 @@ patients_path="patients/$chosen_patient"
 # Now a fancy if statement without an "if"
 [ ! -d "$patients_path" ] && cecho red "❌ Invalid directory chosen: $patients_path" && exit 1
 
-visits_dir="$patients_path/visits"
+visits_dir="${patients_path}/visits"
 if [ ! -d "$visits_dir" ] || ! has_subdirs "$visits_dir"; then
 	# Visits Dir is missing or empty, so first create the dir in case it isn't there.
 	mkdir -p "$visits_dir"
-	cecho green "Created visits/ directory."	
+	cecho green "Created visits/ directory: ${visits_dir}"	
 fi
 
-visit_choice=$($(echo "New"; ls "$visits_dir") | fzf)
+visit_choice=$((echo "New"; ls "$visits_dir") | fzf)
+visit_path=""
 # Check if visit choice == new
 if test "$visit_choice" = "New"; then
 	timestamp=$(date +%Y-%m-%d_%H%M)
 	new_visit_dir="$timestamp"
-	full_new_visit_dir_path="${visits_dir}/${new_visit_dir}"
+	visit_path="${visits_dir}/${new_visit_dir}"
 	#make the new dir
-	mkdir -p "$full_new_visit_dir_path"
+	mkdir -p "$visit_path"
 	#make the meta file
 	metafile="meta.json"
-	new_visit_metafile_path="${full_new_visit_dir_path}/{$metafile}"
-	visit_number=$(ls "visits_dir" | wc -l)
-	cat > "$full_new_visit_metafile_path" <<EOF
+	new_visit_metafile_path="${visit_path}/${metafile}"
+	visit_number=$(ls "$visits_dir" | wc -l)
+	cat > "$new_visit_metafile_path" <<EOF
 {
     "timestamp": "$timestamp"
     "chiropractor": "Dr S",
     "Visit_number": $visit_number
 }
 EOF
-	export VISIT_PATH="$full_new_visit_dir_path"
 else
 	visit_path="${visits_dir}/${visit_choice}"
 	[ ! -d "$visit_path" ] && cecho red "❌ Visit Path does not exist!: $visit_path" && exit 1 
 	#echo visit_path: $visit_path
-	export VISIT_PATH=$visit_path
 fi
 
+export VISIT_PATH="$visit_path"
 cecho green "✅ \$VISIT_PATH set to ${visit_path}"
 
 # Extract last/first name or UID from patient folder
