@@ -16,21 +16,43 @@ chosen_patient=$(ls patients |fzf)
 # Might as well prepend the patients folder to the chosen_patient
 patients_path="patients/$chosen_patient"
 # echo $patients_path
-# Now a fancy if statement withou an "if"
+# Now a fancy if statement without an "if"
 [ ! -d "$patients_path" ] && cecho red "❌ Invalid directory chosen: $patients_path" && exit 1
 
 visits_dir="$patients_path/visits"
 if [ ! -d "$visits_dir" ] || ! has_subdirs "$visits_dir"; then
-	cecho red "❌ Visits directory is missing or empty.  Use eval \$(./scripts/new_visit.py)"  
-	exit 1
+	# Visits Dir is missing or empty, so first create the dir in case it isn't there.
+	mkdir -p "$visits_dir"
+	cecho green "Created visits/ directory."	
 fi
 
-visit_choice=$(ls "$visits_dir" | fzf)
-visit_path="$visits_dir/$visit_choice"
-[ ! -d "$visit_path" ] && cecho red "❌ Visit Path does not exist!: $visit_path" && exit 1 
+visit_choice=$($(echo "New"; ls "$visits_dir") | fzf)
+# Check if visit choice == new
+if test "$visit_choice" = "New"; then
+	timestamp=$(date +%Y-%m-%d_%H%M)
+	new_visit_dir="$timestamp"
+	full_new_visit_dir_path="${visits_dir}/${new_visit_dir}"
+	#make the new dir
+	mkdir -p "$full_new_visit_dir_path"
+	#make the meta file
+	metafile="meta.json"
+	new_visit_metafile_path="${full_new_visit_dir_path}/{$metafile}"
+	visit_number=$(ls "visits_dir" | wc -l)
+	cat > "$full_new_visit_metafile_path" <<EOF
+{
+    "timestamp": "$timestamp"
+    "chiropractor": "Dr S",
+    "Visit_number": $visit_number
+}
+EOF
+	export VISIT_PATH="$full_new_visit_dir_path"
+else
+	visit_path="${visits_dir}/${visit_choice}"
+	[ ! -d "$visit_path" ] && cecho red "❌ Visit Path does not exist!: $visit_path" && exit 1 
+	#echo visit_path: $visit_path
+	export VISIT_PATH=$visit_path
+fi
 
-#echo visit_path: $visit_path
-export VISIT_PATH=${visit_path}
 cecho green "✅ \$VISIT_PATH set to ${visit_path}"
 
 # Extract last/first name or UID from patient folder
